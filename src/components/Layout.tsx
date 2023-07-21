@@ -1,8 +1,8 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode } from 'react'
 
 // Define types for props, if any
 interface LayoutProps {
-  children: ReactNode; // 'children' prop will hold the content passed to the component
+  children: ReactNode // 'children' prop will hold the content passed to the component
 }
 
 // Define the functional component with TypeScript type annotations
@@ -32,7 +32,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </p>
       </footer>
     </div>
-  );
-};
+  )
+}
 
-export default Layout;
+export default Layout

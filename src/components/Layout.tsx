@@ -1,27 +1,45 @@
-import React, { ReactNode } from 'react'
-
-// Define types for props, if any
+import React, { ReactNode } from 'react';
+import { Link } from 'gatsby';
+import { useAuth } from '../auth/AuthProvider';
 interface LayoutProps {
-  children: ReactNode // 'children' prop will hold the content passed to the component
+  children: ReactNode;
 }
 
 // Define the functional component with TypeScript type annotations
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const { user, logout } = useAuth();
+
+  const nav = [
+    { name: 'Oracle', href: '/' },
+    { name: 'Create Deck', href: '/create-deck' },
+    { name: 'Decks', href: '/decks' },
+  ];
+
   return (
     <div>
       <header>
         <h1 className="text-3xl font-bold underline">My Gatsby App</h1>
         <nav>
           <ul>
-            <li>
-              <a href="/">Home</a>
-            </li>
-            <li>
-              <a href="/about">About</a>
-            </li>
-            <li>
-              <a href="/contact">Contact</a>
-            </li>
+            {nav.map((navItem) => (
+              <li key={navItem.name}>
+                <Link to={navItem.href}>{navItem.name}</Link>
+              </li>
+            ))}
+            {user ? (
+              <li>
+                <button onClick={logout}>Logout</button>
+              </li>
+            ) : (
+              <>
+                <li>
+                  <Link to="/login">Login</Link>
+                </li>
+                <li>
+                  <Link to="/signup">Sign Up</Link>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </header>
@@ -32,7 +50,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </p>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

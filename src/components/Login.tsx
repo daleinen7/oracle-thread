@@ -46,6 +46,9 @@ const Login = () => {
         </label>
         <button type="submit">Login</button>
       </form>
+      <button onClick={() => setFormIsLogin(!formIsLogin)}>
+        {formIsLogin ? 'Switch to Signup' : 'Switch to Login'}
+      </button>
     </>
   );
 };

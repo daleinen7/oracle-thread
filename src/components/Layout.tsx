@@ -21,7 +21,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <header>
         <h1 className="text-3xl font-bold underline">My Gatsby App</h1>
         <nav>
-          <ul>
+          <ul className="flex flex-row gap-6">
             {nav.map((navItem) => (
               <li key={navItem.name}>
                 <Link to={navItem.href}>{navItem.name}</Link>

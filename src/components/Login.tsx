@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { navigate } from 'gatsby';
 import { useAuth } from '../auth/AuthProvider';
-import Layout from '../components/Layout';
 
 const Login = () => {
+  const authContext = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [formIsLogin, setFormIsLogin] = useState(true);
 
-  const { login, signup } = useAuth();
+  const login = authContext?.login ?? (() => {});
+  const signup = authContext?.signup ?? (() => {});
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

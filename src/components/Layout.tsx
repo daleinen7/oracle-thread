@@ -8,7 +8,10 @@ interface LayoutProps {
 
 // Define the functional component with TypeScript type annotations
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const { user, login, signup, logout } = useAuth();
+  const authContext = useAuth();
+
+  const user = authContext?.user ?? null;
+  const logout = authContext?.logout ?? (() => {});
 
   const nav = [
     { name: 'Oracle', href: '/' },

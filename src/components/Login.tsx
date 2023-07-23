@@ -44,7 +44,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
-        <button type="submit">Login</button>
+        <button type="submit">{formIsLogin ? 'Login' : 'Sign Up'}</button>
       </form>
       <button onClick={() => setFormIsLogin(!formIsLogin)}>
         {formIsLogin ? 'Switch to Signup' : 'Switch to Login'}

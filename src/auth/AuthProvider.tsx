@@ -22,12 +22,8 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps | null>(null);
 
-export const useAuth = (): AuthContextProps => {
-  const authContext = useContext(AuthContext);
-  if (!authContext) {
-    throw new Error('useAuth must be used within an AuthProvider.');
-  }
-  return authContext;
+export const useAuth = () => {
+  return useContext(AuthContext);
 };
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({

@@ -2,13 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../auth/AuthProvider';
 import { supabase } from '../lib/supabase';
 import Layout from '../components/Layout';
-
-interface Deck {
-  id: string;
-  title: string;
-  description: string;
-  user_id: string;
-}
+import { Deck } from '../lib/types';
 
 const DecksPage: React.FC = () => {
   const [decks, setDecks] = useState<Deck[]>([]);

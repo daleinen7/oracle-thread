@@ -22,9 +22,19 @@ interface AuthContextProps {
 
 const AuthContext = createContext<AuthContextProps | null>(null);
 
-export const useAuth = (): AuthContextProps | null => {
+export const useAuth = (): AuthContextProps => {
   const authContext = useContext(AuthContext);
-  return authContext;
+
+  // Provide a default AuthContextProps object if authContext is null
+  return (
+    authContext || {
+      user: null,
+      login: () => Promise.resolve(),
+      signup: () => Promise.resolve(),
+      logout: () => Promise.resolve(),
+      setUser: () => {},
+    }
+  );
 };
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({

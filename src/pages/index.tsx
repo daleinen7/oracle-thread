@@ -10,12 +10,10 @@ const IndexPage: React.FC<PageProps> = () => {
   return (
     <Layout>
       <h2>Oracle</h2>
-      {user ? (
+      {user && (
         <p>
           You are logged in as <strong>{user.email}</strong>.
         </p>
-      ) : (
-        <Login />
       )}
     </Layout>
   );

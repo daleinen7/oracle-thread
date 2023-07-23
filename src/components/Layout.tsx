@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { Link } from 'gatsby';
 import { useAuth } from '../auth/AuthProvider';
+import Login from '../components/Login';
 interface LayoutProps {
   children: ReactNode;
 }
@@ -34,7 +35,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </ul>
         </nav>
       </header>
-      <main>{children}</main>
+      <main>{user ? children : <Login />}</main>
       <footer>
         <p>
           &copy; {new Date().getFullYear()} Oracle Thread. All rights reserved.

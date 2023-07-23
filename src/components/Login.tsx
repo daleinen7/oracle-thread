@@ -6,17 +6,24 @@ import Layout from '../components/Layout';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [formIsLogin, setFormIsLogin] = useState(true);
 
-  const { login } = useAuth();
+  const { login, signup } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    await login(email, password);
-    navigate('/');
+
+    if (formIsLogin) {
+      await login(email, password);
+      navigate('/');
+    } else {
+      await signup(email, password);
+      setFormIsLogin(true);
+    }
   };
 
   return (
-    <Layout>
+    <>
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <label>
@@ -37,7 +44,7 @@ const Login = () => {
         </label>
         <button type="submit">Login</button>
       </form>
-    </Layout>
+    </>
   );
 };
 

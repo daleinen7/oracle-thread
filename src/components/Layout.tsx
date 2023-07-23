@@ -7,7 +7,7 @@ interface LayoutProps {
 
 // Define the functional component with TypeScript type annotations
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const { user, logout } = useAuth();
+  const { user, login, signup, logout } = useAuth();
 
   const nav = [
     { name: 'Oracle', href: '/' },
@@ -16,7 +16,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   ];
 
   return (
-    <div>
+    <div className="bg-gray-400 min-h-screen">
       <header>
         <h1 className="text-3xl font-bold underline">My Gatsby App</h1>
         <nav>
@@ -26,19 +26,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Link to={navItem.href}>{navItem.name}</Link>
               </li>
             ))}
-            {user ? (
+            {user && (
               <li>
                 <button onClick={logout}>Logout</button>
               </li>
-            ) : (
-              <>
-                <li>
-                  <Link to="/login">Login</Link>
-                </li>
-                <li>
-                  <Link to="/signup">Sign Up</Link>
-                </li>
-              </>
             )}
           </ul>
         </nav>

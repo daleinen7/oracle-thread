@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Link, HeadFC, PageProps } from 'gatsby';
+import { Link } from 'gatsby';
 
-const NotFoundPage: React.FC<PageProps> = () => {
+const NotFoundPage = () => {
   return (
     <main>
       <h1>Page not found</h1>
@@ -15,4 +15,4 @@ const NotFoundPage: React.FC<PageProps> = () => {
 
 export default NotFoundPage;
 
-export const Head: HeadFC = () => <title>Not found</title>;
+export const Head = () => <title>Not found</title>;

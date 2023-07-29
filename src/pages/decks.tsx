@@ -12,7 +12,7 @@ const DecksPage: React.FC = () => {
   useEffect(() => {
     fetchDecks();
     fetchSavedDecks();
-  }, []);
+  }, [user]);
 
   const fetchDecks = async () => {
     try {
@@ -104,11 +104,16 @@ const DecksPage: React.FC = () => {
       <h2>Select Your Decks</h2>
       <ul className="flex flex-wrap gap-4">
         {decks.map((deck) => (
-          <div className="flex flex-col justify-center">
+          <div key={deck.id} className="flex flex-col justify-center">
             <li
-              key={deck.id}
               className="card "
-              style={{ background: deckIsSaved(deck.id) ? 'green' : 'red' }}
+              style={{
+                background: deckIsSaved(deck.id) ? 'green' : 'red',
+                border:
+                  user && deck.user_id === user.id
+                    ? '1px solid blue'
+                    : '1px solid transparent',
+              }}
               onClick={() => handleSaveDeck(deck.id)}
             >
               <p>{deck.description}</p>

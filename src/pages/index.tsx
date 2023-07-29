@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import DeckSelector from '../components/DeckSelector';
 import { supabase } from '../lib/supabase';
 import { Deck, Card } from '../lib/types';
+import { useAuth } from '../auth/AuthProvider';
 
 const Oracle = () => {
   const [decks, setDecks] = useState<Deck[]>([]);
@@ -10,25 +11,46 @@ const Oracle = () => {
   const [cards, setCards] = useState<Card[]>([]);
   const [drawnCards, setDrawnCards] = useState<Card[][]>([]);
 
+  const { user } = useAuth();
+
   useEffect(() => {
-    const fetchDecks = async () => {
+    const fetchSelectedDecks = async () => {
       try {
-        const { data, error } = await supabase.from('decks').select('*');
-        if (error) throw error;
+        if (!user) return; // Make sure the user is logged in
 
-        const processedDecks: Deck[] = data.map((deck) => ({
-          ...deck,
-          isVisible: false,
-        }));
+        // Fetch the deck_ids of decks saved by the user from the user_decks table
+        const { data: userDeckData, error: userDeckError } = await supabase
+          .from('user_decks')
+          .select('deck_id')
+          .eq('user_id', user.id);
 
-        setDecks(processedDecks);
+        if (userDeckError) throw userDeckError;
+
+        const deckIds = userDeckData?.map((item) => item.deck_id) || [];
+
+        // Fetch the selected decks from the decks table based on the deck_ids
+        const { data: deckData, error: deckError } = await supabase
+          .from('decks')
+          .select('*')
+          .in('id', deckIds);
+
+        if (deckError) throw deckError;
+
+        const selectedDecks: Deck[] =
+          deckData?.map((deck) => ({
+            ...deck,
+            isVisible: false,
+          })) || [];
+
+        // Update the selected decks state
+        setDecks(selectedDecks);
       } catch (error) {
-        console.error('Error fetching decks:', error);
+        console.error('Error fetching selected decks:', error);
       }
     };
 
-    fetchDecks();
-  }, []);
+    fetchSelectedDecks();
+  }, [user]);
 
   const fetchCards = async (deckId: string) => {
     try {
@@ -62,9 +84,6 @@ const Oracle = () => {
     if (cards.length > 0) {
       const randomIndex = Math.floor(Math.random() * cards.length);
       const drawnCard = cards[randomIndex];
-
-      console.log('drawnCard', drawnCard);
-      console.log('selectedDeck', selectedDeck);
 
       if (!selectedDeck) return;
 

@@ -2,16 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import DeckSelector from '../components/DeckSelector';
 import { supabase } from '../lib/supabase';
-import { useAuth } from '../auth/AuthProvider';
 import { Deck, Card } from '../lib/types';
 
 const Oracle = () => {
   const [decks, setDecks] = useState<Deck[]>([]);
   const [selectedDeck, setSelectedDeck] = useState<Deck | null>(null);
   const [cards, setCards] = useState<Card[]>([]);
-  const [drawnCards, setDrawnCards] = useState<Card[]>([]);
-
-  const { user } = useAuth();
+  const [drawnCards, setDrawnCards] = useState<Card[][]>([]);
 
   useEffect(() => {
     const fetchDecks = async () => {
@@ -65,10 +62,36 @@ const Oracle = () => {
     if (cards.length > 0) {
       const randomIndex = Math.floor(Math.random() * cards.length);
       const drawnCard = cards[randomIndex];
-      setDrawnCards((prevCards) => [...prevCards, drawnCard]);
-      setCards((prevCards) =>
-        prevCards.filter((card, index) => index !== randomIndex)
-      );
+
+      console.log('drawnCard', drawnCard);
+      console.log('selectedDeck', selectedDeck);
+
+      if (!selectedDeck) return;
+
+      if (drawnCards.length === 0) {
+        setDrawnCards([[drawnCard]]);
+        return;
+      }
+
+      if (
+        drawnCards[drawnCards.length - 1].some((card) => {
+          return card.deck_id === drawnCard.deck_id;
+        })
+      ) {
+        console.log('already drawn');
+        setDrawnCards((prevDrawnCards) => {
+          return [...prevDrawnCards, [drawnCard]];
+        });
+
+        return;
+      } else {
+        console.log('not drawn yet');
+        setDrawnCards((prevDrawnCards) => {
+          const lastRow = prevDrawnCards[prevDrawnCards.length - 1];
+          const newRow = [...lastRow, drawnCard];
+          return [...prevDrawnCards.slice(0, -1), newRow];
+        });
+      }
     }
   };
 
@@ -76,26 +99,25 @@ const Oracle = () => {
     setDrawnCards([]);
   };
 
+  console.log('DRAWN CARDS', drawnCards);
+
   return (
     <Layout>
-      <div className="flex justify-between">
-        <div className="flex-col">
-          <div style={{ display: 'flex' }}>
+      <div className="flex pt-8 justify-between width-wrapper">
+        <div className="flex-col w-full">
+          <div className="flex gap-2 justify-center w-full">
             {decks.map((deck) => {
               if (!deck.isVisible) return null;
               return (
                 <div
                   key={deck.id}
                   onClick={() => handleDeckClick(deck)}
+                  className="card"
                   style={{
-                    border: '1px solid black',
-                    padding: '10px',
-                    cursor: 'pointer',
-                    marginRight: '10px',
                     background:
                       selectedDeck && deck.id === selectedDeck.id
-                        ? 'lightgray'
-                        : 'white',
+                        ? 'white'
+                        : 'lightgray',
                   }}
                 >
                   {deck.title}
@@ -103,30 +125,44 @@ const Oracle = () => {
               );
             })}
           </div>
-          <div>
+          <div className="flex flex-col items-center justify-center gap-8">
             {selectedDeck ? (
-              <div>
-                <button onClick={handleDrawCard} disabled={cards.length === 0}>
-                  Draw Card
-                </button>
-                <button
-                  onClick={handleReset}
-                  disabled={drawnCards.length === 0}
-                >
-                  Reset
-                </button>
-              </div>
+              <button
+                className="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 m-3 dark:bg-gray-600 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+                onClick={handleDrawCard}
+                disabled={cards.length === 0}
+              >
+                Draw Card
+              </button>
             ) : (
               <div>Please select a deck to view its cards.</div>
             )}
             <div>
               {drawnCards.length > 0 ? (
-                drawnCards.map((card) => (
-                  <div key={card.id}>
-                    <h3>{card.title}</h3>
-                    <p>{card.prompt}</p>
+                <>
+                  <div className="flex flex-col w-full gap-2">
+                    {drawnCards.map((cardRow, idx) => (
+                      <div key={idx} className="flex gap-2">
+                        {cardRow.map((card, idx) => (
+                          <div
+                            key={card.id + idx}
+                            className="card"
+                            style={{ background: 'gray' }}
+                          >
+                            {/* <h3>{card.title}</h3> */}
+                            <p>{card.prompt}</p>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
                   </div>
-                ))
+                  <button
+                    onClick={handleReset}
+                    disabled={drawnCards.length === 0}
+                  >
+                    Reset
+                  </button>
+                </>
               ) : (
                 <div>No cards drawn yet.</div>
               )}

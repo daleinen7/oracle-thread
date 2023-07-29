@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  .width-wrapper {
+    max-width: 83.5625rem;
+    padding: 0 2rem;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .card {
+    @apply rounded-lg ring-1 h-44 p-4 cursor-pointer w-36 flex flex-col justify-center align-middle text-center;
+  }
+}

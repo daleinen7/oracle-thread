@@ -104,13 +104,16 @@ const DecksPage: React.FC = () => {
       <h2>Select Your Decks</h2>
       <ul className="flex flex-wrap gap-4">
         {decks.map((deck) => (
-          <li key={deck.id} className="bg-gray-300 max-w-xs">
-            <h3>{deck.title}</h3>
-            <p>{deck.description}</p>
-            <button onClick={() => handleSaveDeck(deck.id)}>
-              {user && deckIsSaved(deck.id) ? 'Unsave' : 'Save'}
-            </button>
-          </li>
+          <div className="flex flex-col justify-center">
+            <li
+              key={deck.id}
+              className="card "
+              style={{ background: deckIsSaved(deck.id) ? 'green' : 'red' }}
+              onClick={() => handleSaveDeck(deck.id)}
+            >
+              <p>{deck.description}</p>
+            </li>
+          </div>
         ))}
       </ul>
     </Layout>

@@ -21,8 +21,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div className="bg-gray-400 min-h-screen">
-      <header>
-        <h1 className="text-3xl font-bold underline">My Gatsby App</h1>
+      <header className="width-wrapper">
+        <h1 className="text-3xl font-bold underline">Oracle Thread</h1>
         <nav>
           <ul className="flex flex-row gap-6">
             {nav.map((navItem) => (
@@ -39,7 +39,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </nav>
       </header>
       <main>{user ? children : <Login />}</main>
-      <footer>
+      <footer className="width-wrapper py-8">
         <p>
           &copy; {new Date().getFullYear()} Oracle Thread. All rights reserved.
         </p>
